@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Metodologia: S&P Ratings</title>
+  <meta name="description" content="Simulação indicativa e simplificada baseada em fatores qualitativos da S&P."/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    body{font-family:'Inter',sans-serif;background:#fff}
+    .title-color{color:#1E428B}
+    .rating-color{color:#009933}
+    .label-color{color:#1E428B}
+    /* radios com cor nativa (suporte amplo) */
+    input[type="radio"]{accent-color:#1E428B}
+  </style>
+</head>
+<body class="bg-white flex items-center justify-center min-h-screen p-4">
+  <main class="w-full max-w-3xl bg-gray-50 p-8 rounded-2xl shadow-lg border border-gray-200">
+    <header class="text-center mb-8">
+      <h1 class="text-3xl font-bold title-color">Metodologia: S&P Ratings</h1>
+      <p class="text-gray-600 mt-2">Selecione as opções para simular um rating indicativo.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Coluna esquerda -->
+      <section>
+        <!-- 1. Construção -->
+        <div class="mb-6">
+          <span class="block text-lg font-bold label-color mb-2">1. Risco de Construção</span>
+          <div class="flex flex-col sm:flex-row sm:space-x-4 gap-2" id="constructionRisk">
+            <label class="flex items-center gap-2">
+              <input type="radio" name="construction" value="brownfield" checked/>
+              <span>Existente (Brownfield)</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="radio" name="construction" value="greenfield"/>
+              <span>Nova (Greenfield)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 2. Operação -->
+        <div class="mb-6">
+          <label for="operator" class="block text-lg font-bold label-color mb-2">2. Risco Operacional</label>
+          <select id="operator" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E428B] focus:border-[#1E428B]">
+            <option value="forte">Operador com forte histórico</option>
+            <option value="medio">Operador com experiência moderada</option>
+            <option value="fraco">Operador novo ou com pouco histórico</option>
+          </select>
+        </div>
+
+        <!-- 3. Receita -->
+        <div class="mb-6">
+          <label for="traffic" class="block text-lg font-bold label-color mb-2">3. Risco de Receita (Tráfego)</label>
+          <select id="traffic" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E428B] focus:border-[#1E428B]">
+            <option value="baixo">Baixa volatilidade</option>
+            <option value="medio">Volatilidade moderada</option>
+            <option value="alto">Alta volatilidade</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Coluna direita -->
+      <section>
+        <!-- 4. Dívida -->
+        <div class="mb-6">
+          <span class="block text-lg font-bold label-color mb-2">4. Estrutura da Dívida</span>
+          <p class="text-sm text-gray-500 mb-2">Exposição a taxa fixa/flutuante.</p>
+          <div class="flex flex-col sm:flex-row sm:space-x-4 gap-2" id="debtStructure">
+            <label class="flex items-center gap-2">
+              <input type="radio" name="debt" value="fixa" checked/>
+              <span>Taxa Fixa</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="radio" name="debt" value="flutuante"/>
+              <span>Taxa Flutuante</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 5. Refinanciamento -->
+        <div class="mb-6">
+          <label for="refinancing" class="block text-lg font-bold label-color mb-2">5. Risco de Refinanciamento</label>
+          <p class="text-sm text-gray-500 mb-2">Aplicável para dívida flutuante/refinanciável.</p>
+          <select id="refinancing" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E428B] focus:border-[#1E428B]" disabled>
+            <option value="a">Spread 'A' (200–300 bps)</option>
+            <option value="bbb">Spread 'BBB' (350–450 bps)</option>
+            <option value="bb">Spread 'BB' (500–700 bps)</option>
+            <option value="b">Spread 'B' (700–900 bps)</option>
+          </select>
+        </div>
+
+        <!-- 6. Inflação -->
+        <div class="mb-6">
+          <span class="block text-lg font-bold label-color mb-2">6. Cenário de Inflação</span>
+          <p class="text-sm text-gray-500 mb-2">Mercados emergentes sofrem mais no cenário pessimista.</p>
+          <div class="flex flex-col sm:flex-row sm:space-x-4 gap-2" id="inflationScenario">
+            <label class="flex items-center gap-2">
+              <input type="radio" name="market" value="desenvolvido" checked/>
+              <span>Mercado Desenvolvido</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="radio" name="market" value="emergente"/>
+              <span>Mercado Emergente</span>
+            </label>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Resultado -->
+    <section class="mt-8 pt-6 border-t-2 border-dashed border-gray-300 text-center">
+      <h2 class="text-2xl font-bold title-color mb-2">Resultado da Simulação</h2>
+      <div class="bg-white p-6 rounded-lg shadow-inner">
+        <p class="text-lg text-gray-600">Rating Simulado:</p>
+        <p id="finalRating" class="text-6xl font-bold rating-color transition-all duration-300" aria-live="polite">–</p>
+        <p class="text-md text-gray-500 mt-2">Pontuação de Risco: <span id="finalScore" class="font-bold">–</span> / 100</p>
+      </div>
+      <p class="mt-3 text-xs text-gray-500">Modelo simplificado; uso educacional.</p>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // elementos
+      const finalRatingEl = document.getElementById('finalRating');
+      const finalScoreEl  = document.getElementById('finalScore');
+      const refinancingSelect = document.getElementById('refinancing');
+
+      // pontuação
+      const SCORES = {
+        construction:{brownfield:20, greenfield:5},
+        operator:{forte:20, medio:10, fraco:0},
+        traffic:{baixo:20, medio:10, alto:0},
+        debt:{fixa:15, flutuante:5},
+        refinancing:{a:10, bbb:7, bb:4, b:0},
+        inflation:{desenvolvido:15, emergente:10}
+      };
+
+      function calc(){
+        const construction = document.querySelector('input[name="construction"]:checked')?.value || 'brownfield';
+        const operator = document.getElementById('operator').value;
+        const traffic = document.getElementById('traffic').value;
+        const debt = document.querySelector('input[name="debt"]:checked')?.value || 'fixa';
+        const market = document.querySelector('input[name="market"]:checked')?.value || 'desenvolvido';
+
+        let total = 0;
+        total += SCORES.construction[construction];
+        total += SCORES.operator[operator];
+        total += SCORES.traffic[traffic];
+        total += SCORES.debt[debt];
+
+        if (debt === 'flutuante'){
+          const refv = refinancingSelect.value;
+          total += SCORES.refinancing[refv];
+        } else {
+          total += SCORES.refinancing.a; // fixa → melhor caso
+        }
+        total += SCORES.inflation[market];
+
+        // mapeamento
+        let rating = 'CCC';
+        if (total >= 95) rating='AAA';
+        else if (total >= 90) rating='AA+';
+        else if (total >= 85) rating='AA';
+        else if (total >= 80) rating='AA-';
+        else if (total >= 75) rating='A+';
+        else if (total >= 70) rating='A';
+        else if (total >= 65) rating='A-';
+        else if (total >= 60) rating='BBB+';
+        else if (total >= 55) rating='BBB';
+        else if (total >= 50) rating='BBB-';
+        else if (total >= 45) rating='BB+';
+        else if (total >= 40) rating='BB';
+        else if (total >= 35) rating='BB-';
+        else if (total >= 30) rating='B+';
+        else if (total >= 25) rating='B';
+        else if (total >= 20) rating='B-';
+
+        // UI
+        finalScoreEl.textContent = total.toString();
+        // reset cor
+        finalRatingEl.classList.remove('text-[#009933]','text-yellow-500','text-red-600');
+        // cores por faixa
+        if (total >= 65) finalRatingEl.classList.add('text-[#009933]');
+        else if (total >= 40) finalRatingEl.classList.add('text-yellow-500');
+        else finalRatingEl.classList.add('text-red-600');
+
+        finalRatingEl.textContent = rating;
+      }
+
+      function onDebtChange(){
+        const isFloating = document.querySelector('input[name="debt"]:checked')?.value === 'flutuante';
+        refinancingSelect.disabled = !isFloating;
+        refinancingSelect.classList.toggle('bg-gray-200', !isFloating);
+        calc();
+      }
+
+      // listeners
+      document.querySelectorAll('input[type="radio"]').forEach(el=> el.addEventListener('change', onDebtChange));
+      document.querySelectorAll('select').forEach(el=> el.addEventListener('change', calc));
+
+      // inicial
+      onDebtChange(); // também chama calc()
+    });
+  </script>
+</body>
+</html>

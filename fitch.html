@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Metodologia: Fitch Ratings</title>
+  <meta name="description" content="Simulação simples e indicativa baseada em fatores qualitativos da Fitch Ratings."/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+    body{font-family:'Inter',sans-serif}
+  </style>
+</head>
+<body class="bg-white min-h-screen p-4 flex items-center justify-center">
+  <main class="bg-white shadow-xl rounded-2xl p-8 max-w-2xl w-full">
+    <h1 class="text-3xl font-bold text-[#009933] mb-6 text-center">Metodologia: Fitch Ratings</h1>
+    <p class="text-[#1E428B] mb-8 text-center">
+      Selecione as características do projeto para simular um rating indicativo. Modelo simplificado para fins didáticos.
+    </p>
+
+    <section id="rating-form" class="space-y-6">
+      <div class="p-6 bg-gray-50 rounded-xl">
+        <label for="revenue-risk" class="block text-lg font-medium text-[#009933] mb-2">1. Risco de Receita</label>
+        <p class="text-sm text-[#1E428B] mb-6">Previsibilidade de demanda e mecanismo de preços.</p>
+        <select id="revenue-risk" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 focus:outline-none focus:ring-[#1E428B] focus:border-[#1E428B]">
+          <option value="3">Stronger: demanda previsível, tarifa transparente</option>
+          <option value="2" selected>Midrange: sensível a fatores externos, tarifa regulada</option>
+          <option value="1">Weaker: alta volatilidade de demanda e tarifa</option>
+        </select>
+      </div>
+
+      <div class="p-6 bg-gray-50 rounded-xl">
+        <label for="operation-risk" class="block text-lg font-medium text-[#009933] mb-2">2. Risco de Operação</label>
+        <p class="text-sm text-[#1E428B] mb-6">Capacidade de O&M e controle de custos.</p>
+        <select id="operation-risk" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 focus:outline-none focus:ring-[#1E428B] focus:border-[#1E428B]">
+          <option value="3">Stronger: custos previsíveis; operador experiente</option>
+          <option value="2" selected>Midrange: alguma volatilidade; manutenção material</option>
+          <option value="1">Weaker: custos sensíveis; manutenção complexa</option>
+        </select>
+      </div>
+
+      <div class="p-6 bg-gray-50 rounded-xl">
+        <span class="block text-lg font-medium text-[#009933] mb-2">3. Estrutura da Dívida</span>
+        <p class="text-sm text-[#1E428B] mb-6">Proteções e prioridade de pagamento.</p>
+        <div class="space-y-3">
+          <label class="flex items-center gap-3">
+            <input id="debt-stronger" name="debt-structure" type="radio" value="3" class="h-4 w-4 text-[#1E428B] border-gray-300 focus:ring-[#1E428B]" checked/>
+            <span class="text-sm text-[#1E428B]">Stronger: dívida sênior com prioridade</span>
+          </label>
+          <label class="flex items-center gap-3">
+            <input id="debt-midrange" name="debt-structure" type="radio" value="2" class="h-4 w-4 text-[#1E428B] border-gray-300 focus:ring-[#1E428B]"/>
+            <span class="text-sm text-[#1E428B]">Midrange: subordinação limitada</span>
+          </label>
+          <label class="flex items-center gap-3">
+            <input id="debt-weaker" name="debt-structure" type="radio" value="1" class="h-4 w-4 text-[#1E428B] border-gray-300 focus:ring-[#1E428B]"/>
+            <span class="text-sm text-[#1E428B]">Weaker: dívida subordinada</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="p-6 bg-gray-50 rounded-xl">
+        <label for="counterparty-risk" class="block text-lg font-medium text-[#009933] mb-2">4. Contraparte / Suporte Público</label>
+        <p class="text-sm text-[#1E428B] mb-6">Qualidade das contrapartes e eventual suporte.</p>
+        <select id="counterparty-risk" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 focus:outline-none focus:ring-[#1E428B] focus:border-[#1E428B]">
+          <option value="3">Stronger: suporte sólido; contrapartes de alta qualidade</option>
+          <option value="2" selected>Midrange: suporte limitado; qualidade média</option>
+          <option value="1">Weaker: sem suporte; risco elevado</option>
+        </select>
+      </div>
+
+      <div class="p-6 bg-gray-50 rounded-xl">
+        <label for="dscr" class="block text-lg font-medium text-[#009933] mb-2">5. DSCR (Cobertura do Serviço da Dívida)</label>
+        <p class="text-sm text-[#1E428B] mb-6">Capacidade de caixa para a dívida.</p>
+        <select id="dscr" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 focus:outline-none focus:ring-[#1E428B] focus:border-[#1E428B]">
+          <option value="3">Stronger: DSCR médio &gt; 1,5x</option>
+          <option value="2" selected>Midrange: 1,2x–1,5x</option>
+          <option value="1">Weaker: &lt; 1,2x</option>
+        </select>
+      </div>
+
+      <div class="p-6 bg-gray-50 rounded-xl">
+        <label for="sponsors" class="block text-lg font-medium text-[#009933] mb-2">6. Patrocinadores</label>
+        <p class="text-sm text-[#1E428B] mb-6">Experiência, reputação e incentivos.</p>
+        <select id="sponsors" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 focus:outline-none focus:ring-[#1E428B] focus:border-[#1E428B]">
+          <option value="3">Stronger: líder de mercado; suporte consistente</option>
+          <option value="2" selected>Midrange: experiência razoável; incentivos alinhados</option>
+          <option value="1">Weaker: pouca experiência; visão de curto prazo</option>
+        </select>
+      </div>
+    </section>
+
+    <div class="mt-8 text-center">
+      <button id="simulate-button" class="inline-flex items-center justify-center px-6 py-3 rounded-full text-white bg-[#1E428B] hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E428B] transition">
+        Simular Rating
+      </button>
+    </div>
+
+    <section id="result-container" class="mt-8 p-6 rounded-xl text-center hidden">
+      <h3 class="text-xl font-bold mb-2">Rating Indicativo:</h3>
+      <div id="rating-result" class="text-5xl font-extrabold">–</div>
+      <p class="mt-2 text-sm" id="rating-explanation"></p>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const el = id => document.getElementById(id);
+      const simulateButton = el('simulate-button');
+      const resultContainer = el('result-container');
+      const ratingResult = el('rating-result');
+      const ratingExplanation = el('rating-explanation');
+
+      function valInt(selectId){
+        const v = parseInt(el(selectId).value, 10);
+        return Number.isFinite(v) ? v : 0;
+        }
+
+      function valRadio(name){
+        const r = document.querySelector(`input[name="${name}"]:checked`);
+        const v = r ? parseInt(r.value, 10) : 0;
+        return Number.isFinite(v) ? v : 0;
+      }
+
+      function mapRating(score){
+        // faixa possível: 6 (tudo Weaker) a 18 (tudo Stronger)
+        if (score >= 16) return {grade:'AAA', text:'Baixíssimo risco de crédito; maioria dos fatores em Stronger.'};
+        if (score >= 12) return {grade:'A',   text:'Baixo risco de crédito; combinação de Stronger e Midrange.'};
+        if (score >= 9)  return {grade:'BBB', text:'Risco aceitável; maior sensibilidade a cenários adversos.'};
+        if (score >= 6)  return {grade:'BB',  text:'Nível especulativo; vulnerável a condições adversas.'};
+        return {grade:'C', text:'Alto risco; predominância de fatores Weaker.'};
+      }
+
+      function paintBox(grade){
+        resultContainer.className = 'mt-8 p-6 rounded-xl text-center';
+        ratingResult.className = 'text-5xl font-extrabold';
+        ratingExplanation.className = 'mt-2 text-sm';
+
+        if (grade === 'AAA' || grade === 'A'){
+          resultContainer.classList.add('bg-[#e6f4e6]','border-2','border-[#009933]');
+          ratingResult.classList.add('text-[#009933]');
+          ratingExplanation.classList.add('text-[#009933]');
+        } else if (grade === 'BBB' || grade === 'BB'){
+          resultContainer.classList.add('bg-[#e8f1ff]','border-2','border-[#1E428B]');
+          ratingResult.classList.add('text-[#1E428B]');
+          ratingExplanation.classList.add('text-[#1E428B]');
+        } else {
+          resultContainer.classList.add('bg-[#fef2f2]','border-2','border-[#fca5a5]');
+          ratingResult.classList.add('text-[#dc2626]');
+          ratingExplanation.classList.add('text-[#dc2626]');
+        }
+      }
+
+      simulateButton.addEventListener('click', () => {
+        const total =
+          valInt('revenue-risk') +
+          valInt('operation-risk') +
+          valRadio('debt-structure') +
+          valInt('counterparty-risk') +
+          valInt('dscr') +
+          valInt('sponsors');
+
+        const {grade, text} = mapRating(total);
+        ratingResult.textContent = grade;
+        ratingExplanation.textContent = text;
+        paintBox(grade);
+        resultContainer.classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

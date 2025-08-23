@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avaliação de Rodovia Estadual</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body{font-family:'Inter',sans-serif;height:100vh;overflow:hidden}
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button{ -webkit-appearance:none;margin:0}
+    input[type="number"]{ -moz-appearance:textfield}
+  </style>
+</head>
+<body class="bg-white text-gray-900 p-6 flex items-center justify-center">
+  <div class="w-full bg-gray-100 rounded-lg shadow-xl p-8 overflow-y-auto max-h-[95vh]">
+    <h1 class="text-3xl font-bold text-[#009933] mb-2">Metodologia Moody's</h1>
+    <p class="text-gray-600 mb-8 text-sm">Cenário simplificado para uma concessão de 20 anos</p>
+
+    <div id="warn" class="hidden mb-4 rounded-md bg-yellow-100 text-yellow-900 text-sm px-4 py-2"></div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-300 rounded-lg overflow-hidden table-auto">
+        <thead class="bg-gray-200">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-800 uppercase tracking-wider">Fator</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-800 uppercase tracking-wider">Subfator</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-800 uppercase tracking-wider">Score Numérico</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-800 uppercase tracking-wider">Peso</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-800 uppercase tracking-wider">Score x Peso</th>
+          </tr>
+        </thead>
+        <tbody id="score-table-body" class="bg-white divide-y divide-gray-300"></tbody>
+      </table>
+    </div>
+
+    <div class="mt-8 flex flex-col sm:flex-row items-end justify-between">
+      <div class="text-gray-600 mb-4 sm:mb-0">
+        <p class="text-lg">Total Score = </p>
+        <div class="flex flex-wrap gap-x-2 text-xs" id="calculation-string"></div>
+      </div>
+      <div class="flex flex-col items-end">
+        <div class="flex items-center text-5xl font-bold text-[#1E428B] mb-2">
+          <span id="total-score-display">–</span>
+        </div>
+        <div class="text-lg font-bold text-gray-800">
+          Rating: <span id="rating-display" class="text-[#009933]">–</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dados iniciais
+    const tableData = [
+      { fator:"Perfil do Negócio",            subfator:"Posição no Mercado",                              score:6.0,  weight:0.25 },
+      { fator:"Perfil do Negócio",            subfator:"Previsibilidade do Fluxo de Caixa",               score:7.5,  weight:0.25 },
+      { fator:"Rentabilidade e Eficiência",   subfator:"Tecnologia e O&M",                                score:4.5,  weight:0.10 },
+      { fator:"Rentabilidade e Eficiência",   subfator:"Reinvestimento de Capital",                       score:6.0,  weight:0.05 },
+      { fator:"Alavancagem e Cobertura",      subfator:"Perfil do Patrocinador",                          score:6.0,  weight:0.05 },
+      { fator:"Alavancagem e Cobertura",      subfator:"ICSD 3Y Média = 1,30x",                           score:12.0, weight:0.15 },
+      { fator:"Alavancagem e Cobertura",      subfator:"CFO / Dívida Ajustada = 7%",                      score:8.0,  weight:0.15 }
+    ];
+
+    const scoreTableBody   = document.getElementById('score-table-body');
+    const totalScoreDisplay= document.getElementById('total-score-display');
+    const calculationString= document.getElementById('calculation-string');
+    const ratingDisplay    = document.getElementById('rating-display');
+    const warnBox          = document.getElementById('warn');
+
+    const fmt = (n)=> n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const parseNum = (v)=> {
+      if (typeof v !== 'string') return Number(v)||0;
+      return Number(v.replace(/\./g,'').replace(',', '.')) || 0;
+    };
+
+    function getRating(score){
+      if (score <= 1.5) return "(AAA)";
+      if (score <= 2.5) return "(AA+)";
+      if (score <= 3.5) return "(AA)";
+      if (score <= 4.5) return "(AA-)";
+      if (score <= 5.5) return "(A+)";
+      if (score <= 6.5) return "(A)";
+      if (score <= 7.5) return "(A-)";
+      if (score <= 8.5) return "(BBB+)";
+      if (score <= 9.5) return "(BBB)";
+      if (score <= 10.5) return "(BBB-)";
+      if (score <= 11.5) return "(BB+)";
+      if (score <= 12.5) return "(BB)";
+      if (score <= 13.5) return "(BB-)";
+      if (score <= 14.5) return "(B+)";
+      if (score <= 15.5) return "(B)";
+      if (score <= 16.5) return "(B-)";
+      if (score <= 17.5) return "(CCC+)";
+      if (score <= 18.5) return "(CCC)";
+      if (score <= 19.5) return "(CCC-)";
+      if (score <= 20.5) return "(CC)";
+      return "(C)";
+    }
+
+    let rows = [];
+
+    function populateTable(){
+      scoreTableBody.innerHTML = '';
+      rows = [];
+      tableData.forEach((data, idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${data.fator}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${data.subfator}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+            <label class="sr-only" for="score-${idx}">Score numérico</label>
+            <input id="score-${idx}" type="text" inputmode="decimal" pattern="[0-9]+([\\.,][0-9]+)?"
+              value="${data.score.toString().replace('.',',')}"
+              class="w-24 bg-gray-100 text-gray-900 border border-gray-400 rounded-md px-2 py-1 text-right focus:outline-none focus:ring-2 focus:ring-teal-500"
+              data-index="${idx}" data-type="score" aria-label="Score numérico">
+            <span class="text-xs text-gray-500 dynamic-rating"></span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+            <label class="sr-only" for="weight-${idx}">Peso</label>
+            <input id="weight-${idx}" type="text" inputmode="decimal" pattern="[0-9]+([\\.,][0-9]+)?"
+              value="${(data.weight*100).toString().replace('.',',')}"
+              class="w-20 bg-gray-100 text-gray-900 border border-gray-400 rounded-md px-2 py-1 text-right focus:outline-none focus:ring-2 focus:ring-teal-500"
+              data-index="${idx}" data-type="weight" aria-label="Peso">%
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+            <span class="score-x-weight"></span>
+          </td>
+        `;
+        scoreTableBody.appendChild(tr);
+        rows.push({
+          scoreInput: tr.querySelector('input[data-type="score"]'),
+          weightInput: tr.querySelector('input[data-type="weight"]'),
+          scoreXWeightDisplay: tr.querySelector('.score-x-weight'),
+          individualRatingDisplay: tr.querySelector('.dynamic-rating')
+        });
+      });
+
+      rows.forEach(row=>{
+        row.scoreInput.addEventListener('input', updateTable);
+        row.weightInput.addEventListener('input', updateTable);
+        row.scoreInput.addEventListener('change', updateTable);
+        row.weightInput.addEventListener('change', updateTable);
+      });
+
+      updateTable();
+    }
+
+    function updateTable(){
+      let totalScore = 0;
+      let calculationParts = [];
+      let sumWeightsPct = 0;
+
+      rows.forEach((row)=>{
+        const score  = parseNum(row.scoreInput.value);
+        const weightPct = parseNum(row.weightInput.value);
+        const weight = weightPct/100;
+        const scoreXWeight = score * weight;
+
+        row.scoreXWeightDisplay.textContent = fmt(scoreXWeight);
+        row.individualRatingDisplay.textContent = getRating(score);
+
+        calculationParts.push(fmt(scoreXWeight));
+        totalScore += scoreXWeight;
+        sumWeightsPct += weightPct;
+      });
+
+      totalScoreDisplay.textContent = fmt(totalScore);
+      calculationString.textContent = calculationParts.join(' + ');
+      ratingDisplay.textContent = getRating(totalScore).replace(/[()]/g,'');
+
+      // Aviso de soma de pesos
+      const delta = Math.abs(sumWeightsPct - 100);
+      if (delta > 0.01){
+        warnBox.textContent = `A soma dos pesos é ${sumWeightsPct.toLocaleString('pt-BR',{maximumFractionDigits:2})}% (ajuste para 100%).`;
+        warnBox.classList.remove('hidden');
+      } else {
+        warnBox.classList.add('hidden');
+      }
+    }
+
+    window.onload = populateTable;
+  </script>
+</body>
+</html>
