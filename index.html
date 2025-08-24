@@ -18,14 +18,109 @@
     .btn-secondary{background:#FFFFFF;color:#1E428B;border-color:#1E428B;transition:background-color .3s ease, color .3s ease, transform .2s ease}
     .btn-secondary:hover{background:#f0f5ff;transform:translateY(-2px)}
     
-    /* Ajuste para o chat do Flowise */
+    /* Estilos para o chatbot */
+    .flowise-chatbot-button {
+      position: fixed !important;
+      bottom: 20px !important;
+      right: 20px !important;
+      width: 56px !important;
+      height: 56px !important;
+      border-radius: 50% !important;
+      background-color: #1E428B !important;
+      z-index: 1000 !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    }
+
+    /* Container do chat - ocupa lateral direita */
     .flowise-chatbot-container {
-      max-height: 550px !important;
+      position: fixed !important;
+      top: 0 !important;
+      right: 0 !important;
+      height: 100vh !important;
+      width: 400px !important;
+      max-width: 90vw !important;
+      border-radius: 0 !important;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1) !important;
+      z-index: 9999 !important;
+      transform: translateX(100%) !important;
+      transition: transform 0.3s ease !important;
+    }
+
+    .flowise-chatbot-container.open {
+      transform: translateX(0) !important;
+    }
+
+    /* Janela do chat */
+    .flowise-chatbot-container .chat-window,
+    .flowise-chatbot-container > div {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      border-radius: 0 !important;
+    }
+
+    /* Área de mensagens - com scroll */
+    .flowise-chatbot-container .chat-messages,
+    .flowise-chatbot-container .messages-container {
+      flex: 1 !important;
       overflow-y: auto !important;
+      padding: 16px !important;
+      max-height: calc(100vh - 120px) !important;
+    }
+
+    /* Input do chat - fixo na parte inferior */
+    .flowise-chatbot-container .chat-input,
+    .flowise-chatbot-container .input-container {
+      position: sticky !important;
+      bottom: 0 !important;
+      background: white !important;
+      padding: 16px !important;
+      border-top: 1px solid #e5e7eb !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* Header do chat */
+    .flowise-chatbot-container .chat-header {
+      flex-shrink: 0 !important;
+      padding: 16px !important;
+      background: #009933 !important;
+      color: white !important;
+    }
+
+    /* Responsivo - em telas pequenas, ocupa tela toda */
+    @media (max-width: 768px) {
+      .flowise-chatbot-container {
+        width: 100vw !important;
+        left: 0 !important;
+      }
+    }
+
+    /* Overlay quando chat está aberto */
+    .chat-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9998;
+      display: none;
+    }
+
+    .chat-overlay.active {
+      display: block;
+    }
+
+    /* Ajustes para garantir scroll */
+    .flowise-chatbot-container * {
+      box-sizing: border-box !important;
     }
   </style>
 </head>
 <body class="bg-white flex items-center justify-center min-h-screen p-4">
+  <!-- Overlay para mobile -->
+  <div class="chat-overlay" id="chatOverlay"></div>
+
   <main class="w-full max-w-lg bg-gray-50 p-8 sm:p-12 rounded-2xl shadow-lg border border-gray-200 text-center">
     <header class="mb-10">
       <h1 class="text-4xl font-bold green-title-color">Selecione a metodologia</h1>
@@ -60,69 +155,91 @@
     </footer>
   </main>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chatbot Metodologia de Risco de Crédito</title>
-</head>
-<body style="margin:0; height:100vh;">
-
-<script type="module">
-  import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-  Chatbot.init({
-    chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
-    apiHost: "https://cloud.flowiseai.com",
-    theme: {
-      button: {
-        backgroundColor: "#1E428B",
-        iconColor: "#FFFFFF",
-        size: "56px",
-        bottom: "20px",
-        right: "20px",
-        borderRadius: "50%"
+  <!-- Script do Chatbot -->
+  <script type="module">
+    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+    
+    Chatbot.init({
+      chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
+      apiHost: "https://cloud.flowiseai.com",
+      theme: {
+        button: {
+          backgroundColor: "#1E428B",
+          iconColor: "#FFFFFF",
+          size: "56px",
+          bottom: "20px",
+          right: "20px",
+          borderRadius: "50%"
+        },
+        chatWindow: {
+          title: "Chatbot Metodologia de Risco de Crédito",
+          titleBackgroundColor: "#009933",
+          backgroundColor: "#FFFFFF",
+          textColor: "#1E428B",
+          poweredByTextColor: "#999999",
+          height: "100vh",
+          width: "400px"
+        }
       },
-      chatWindow: {
-        title: "Chatbot Metodologia de Risco de Crédito",
-        titleBackgroundColor: "#009933",
-        backgroundColor: "#FFFFFF",
-        textColor: "#1E428B",
-        poweredByTextColor: "#999999"
+      initialMessages: [
+        "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
+      ]
+    })
+
+    // Script para melhorar o comportamento do chat
+    setTimeout(() => {
+      const chatButton = document.querySelector('.flowise-chatbot-button');
+      const chatContainer = document.querySelector('.flowise-chatbot-container');
+      const overlay = document.getElementById('chatOverlay');
+
+      if (chatButton) {
+        chatButton.addEventListener('click', () => {
+          if (chatContainer) {
+            chatContainer.classList.add('open');
+            overlay.classList.add('active');
+          }
+        });
       }
-    },
-    initialMessages: [
-      "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
-    ]
-  })
-</script>
 
-<style>
-  /* Força o chat a abrir como painel lateral direito */
-  .flowise-chatbot-container {
-    position: fixed !important;
-    top: 0 !important;
-    right: 0 !important;
-    height: 100vh !important;
-    width: 40% !important;  /* pode trocar para 100% se quiser tela cheia */
-    border-radius: 0 !important;
-    max-height: none !important;
-    z-index: 9999 !important; /* garante que fique acima dos outros elementos */
-  }
+      // Fechar chat ao clicar no overlay
+      overlay.addEventListener('click', () => {
+        if (chatContainer) {
+          chatContainer.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      });
 
-  /* Garante rolagem no conteúdo interno */
-  .flowise-chatbot-container .chat-window {
-    height: 100% !important;
-    overflow-y: auto !important;
-  }
-</style>
-
-  
-
-  
+      // Adicionar botão de fechar no chat
+      if (chatContainer) {
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '×';
+        closeBtn.style.cssText = `
+          position: absolute;
+          top: 10px;
+          right: 15px;
+          background: transparent;
+          border: none;
+          color: white;
+          font-size: 24px;
+          cursor: pointer;
+          z-index: 10000;
+        `;
+        closeBtn.addEventListener('click', () => {
+          chatContainer.classList.remove('open');
+          overlay.classList.remove('active');
+        });
+        
+        setTimeout(() => {
+          const header = chatContainer.querySelector('.chat-header') || chatContainer.querySelector('[style*="background"]');
+          if (header) {
+            header.appendChild(closeBtn);
+          }
+        }, 1000);
+      }
+    }, 2000);
+  </script>
 </body>
 </html>
-
 
 
 
