@@ -69,35 +69,60 @@
 </head>
 <body style="margin:0; height:100vh;">
 
-  <!-- O chat ocupa toda a página -->
-  <flowise-fullchatbot></flowise-fullchatbot>
-
-  <script type="module">
-    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-    Chatbot.initFull({
-      chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
-      apiHost: "https://cloud.flowiseai.com",
-      theme: {
-        chatWindow: {
-          title: "Chatbot Metodologia de Risco de Crédito",
-          titleBackgroundColor: "#009933",
-          backgroundColor: "#FFFFFF",
-          textColor: "#1E428B",
-          poweredByTextColor: "#999999"
-        }
+<script type="module">
+  import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+  Chatbot.init({
+    chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
+    apiHost: "https://cloud.flowiseai.com",
+    theme: {
+      button: {
+        backgroundColor: "#1E428B",
+        iconColor: "#FFFFFF",
+        size: "56px",
+        bottom: "20px",
+        right: "20px",
+        borderRadius: "50%"
       },
-      initialMessages: [
-        "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
-      ]
-    })
-  </script>
-</body>
-</html>
+      chatWindow: {
+        title: "Chatbot Metodologia de Risco de Crédito",
+        titleBackgroundColor: "#009933",
+        backgroundColor: "#FFFFFF",
+        textColor: "#1E428B",
+        poweredByTextColor: "#999999"
+      }
+    },
+    initialMessages: [
+      "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
+    ]
+  })
+</script>
 
+<style>
+  /* Força o chat a abrir como painel lateral direito */
+  .flowise-chatbot-container {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    height: 100vh !important;
+    width: 40% !important;  /* pode trocar para 100% se quiser tela cheia */
+    border-radius: 0 !important;
+    max-height: none !important;
+    z-index: 9999 !important; /* garante que fique acima dos outros elementos */
+  }
+
+  /* Garante rolagem no conteúdo interno */
+  .flowise-chatbot-container .chat-window {
+    height: 100% !important;
+    overflow-y: auto !important;
+  }
+</style>
+
+  
 
   
 </body>
 </html>
+
 
 
 
