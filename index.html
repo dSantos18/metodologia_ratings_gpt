@@ -60,36 +60,45 @@
     </footer>
   </main>
 
-  <script type="module">
-    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-    Chatbot.init({
-      chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
-      apiHost: "https://cloud.flowiseai.com",
-      theme: {
-        button: {
-          backgroundColor: "#1E428B",
-          iconColor: "#FFFFFF",
-          size: "48px",
-          bottom: "20px",
-          right: "20px",
-          borderRadius: "50%"
-        },
-        chatWindow: {
-          title: "Chatbot Metodologia de Risco de Crédito",
-          titleBackgroundColor: "#009933",
-          backgroundColor: "#FFFFFF",
-          textColor: "#1E428B",
-          poweredByTextColor: "#999999",
-          height: "550px",
-          width: "400px"
-        }
+<script type="module">
+  import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+  Chatbot.init({
+    chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
+    apiHost: "https://cloud.flowiseai.com",
+    theme: {
+      button: {
+        backgroundColor: "#1E428B",
+        iconColor: "#FFFFFF",
+        size: "56px",
+        bottom: "20px",
+        right: "20px",
+        borderRadius: "50%"
       },
-      initialMessages: [
-        "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
-      ]
-    })
-  </script>
+      chatWindow: {
+        title: "Metodologia de Risco de Crédito",
+        titleBackgroundColor: "#009933",
+        backgroundColor: "#FFFFFF",
+        textColor: "#1E428B",
+        poweredByTextColor: "#999999",
+
+        /* Faz a janela ocupar toda a lateral esquerda */
+        width: "40%",         /* ocupa 40% da tela (pode ajustar para 100% se quiser full) */
+        height: "100vh",      /* altura total da janela */
+        position: "fixed",
+        top: "0",
+        left: "0",
+        borderRadius: "0"     /* remove bordas arredondadas */
+      }
+    },
+    initialMessages: [
+      "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
+    ]
+  })
+</script>
+
+  
 </body>
 </html>
+
 
 
