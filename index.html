@@ -17,6 +17,36 @@
     .btn-primary:hover{background:#16336a;transform:translateY(-2px)}
     .btn-secondary{background:#FFFFFF;color:#1E428B;border-color:#1E428B;transition:background-color .3s ease, color .3s ease, transform .2s ease}
     .btn-secondary:hover{background:#f0f5ff;transform:translateY(-2px)}
+    
+    /* Botão do chat personalizado */
+    .chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: #1E428B;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(30, 66, 139, 0.3);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      border: none;
+    }
+    
+    .chat-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(30, 66, 139, 0.4);
+    }
+    
+    .chat-button svg {
+      width: 28px;
+      height: 28px;
+      color: white;
+    }
   </style>
 </head>
 <body class="bg-white flex items-center justify-center min-h-screen p-4">
@@ -54,242 +84,121 @@
     </footer>
   </main>
 
-  <!-- Script do Chatbot -->
+  <!-- Botão do Chat Personalizado -->
+  <button class="chat-button" onclick="openChatPage()" title="Abrir Chat de Metodologia">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+    </svg>
+  </button>
+
+  <script>
+    function openChatPage() {
+      // Cria o HTML da página do chat
+      const chatPageHTML = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat - Metodologia de Risco de Crédito</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .header {
+      background: #009933;
+      color: white;
+      padding: 16px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    
+    .close-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .chat-container {
+      height: calc(100vh - 68px);
+    }
+    
+    flowise-fullchatbot {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Chatbot Metodologia de Risco de Crédito</h1>
+    <button class="close-btn" onclick="window.close()" title="Fechar">×</button>
+  </div>
+  
+  <div class="chat-container">
+    <flowise-fullchatbot></flowise-fullchatbot>
+  </div>
+
   <script type="module">
     import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-    
-    Chatbot.init({
+    Chatbot.initFull({
       chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
       apiHost: "https://cloud.flowiseai.com",
       theme: {
-        button: {
-          backgroundColor: "#1E428B",
-          iconColor: "#FFFFFF",
-          size: "56px",
-          bottom: "20px",
-          right: "20px",
-          borderRadius: "50%"
-        },
         chatWindow: {
-          title: "Chatbot Metodologia de Risco de Crédito",
-          titleBackgroundColor: "#009933",
           backgroundColor: "#FFFFFF",
           textColor: "#1E428B",
-          poweredByTextColor: "#999999",
-          height: "100vh",
-          width: "400px"
+          poweredByTextColor: "#999999"
         }
-      },
-      initialMessages: [
-        "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
-      ]
-    }).then(() => {
-      // Aguarda o chatbot ser completamente carregado
-      setTimeout(() => {
-        applyCustomStyles();
-        setupChatBehavior();
-      }, 3000);
-    });
+      }
+    })
+  </script>
+</body>
+</html>`;
 
-    function applyCustomStyles() {
-      // Remove estilos existentes conflitantes
-      const existingStyle = document.getElementById('flowise-custom-styles');
-      if (existingStyle) existingStyle.remove();
-
-      // Criar e inserir novos estilos
-      const style = document.createElement('style');
-      style.id = 'flowise-custom-styles';
-      style.textContent = `
-        /* FORÇA o botão para o canto inferior direito */
-        div[style*="position: fixed"][style*="bottom"][style*="right"] {
-          position: fixed !important;
-          bottom: 20px !important;
-          right: 20px !important;
-          top: auto !important;
-          left: auto !important;
-          transform: none !important;
-          width: 56px !important;
-          height: 56px !important;
-          border-radius: 50% !important;
-          background-color: #1E428B !important;
-          z-index: 10000 !important;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
-        }
-
-        /* Container do chat - lateral direita */
-        div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) {
-          position: fixed !important;
-          top: 0 !important;
-          right: 0 !important;
-          bottom: 0 !important;
-          left: auto !important;
-          width: 400px !important;
-          max-width: 90vw !important;
-          height: 100vh !important;
-          max-height: 100vh !important;
-          border-radius: 0 !important;
-          z-index: 9999 !important;
-          transform: none !important;
-          box-shadow: -4px 0 15px rgba(0,0,0,0.1) !important;
-        }
-
-        /* Estrutura interna do chat */
-        div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) > div {
-          height: 100% !important;
-          display: flex !important;
-          flex-direction: column !important;
-          overflow: hidden !important;
-        }
-
-        /* Header do chat */
-        div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) > div > div:first-child {
-          flex-shrink: 0 !important;
-          background: #009933 !important;
-          color: white !important;
-          padding: 16px !important;
-          position: relative !important;
-        }
-
-        /* Área de mensagens - FORÇAR SCROLL */
-        div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) > div > div:nth-child(2),
-        div[style*="overflow"] {
-          flex: 1 !important;
-          overflow-y: auto !important;
-          overflow-x: hidden !important;
-          padding: 16px !important;
-          max-height: calc(100vh - 140px) !important;
-          min-height: 0 !important;
-        }
-
-        /* Input do chat - FORÇAR NA PARTE INFERIOR */
-        div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) > div > div:last-child,
-        div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) form,
-        div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) input[type="text"] {
-          position: sticky !important;
-          bottom: 0 !important;
-          flex-shrink: 0 !important;
-          background: white !important;
-          padding: 16px !important;
-          border-top: 1px solid #e5e7eb !important;
-          z-index: 1000 !important;
-        }
-
-        /* Responsivo */
-        @media (max-width: 768px) {
-          div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"]) {
-            width: 100vw !important;
-            left: 0 !important;
-            right: 0 !important;
-          }
-        }
-
-        /* Força scroll em todos os elementos de mensagem */
-        * {
-          scrollbar-width: thin;
-          scrollbar-color: #cbd5e1 #f1f5f9;
-        }
-        
-        *::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        *::-webkit-scrollbar-track {
-          background: #f1f5f9;
-        }
-        
-        *::-webkit-scrollbar-thumb {
-          background: #cbd5e1;
-          border-radius: 3px;
-        }
-      `;
-      document.head.appendChild(style);
-
-      // Força aplicação dos estilos em intervalos
-      const forceStyles = () => {
-        const elements = document.querySelectorAll('div[style*="position: fixed"]');
-        elements.forEach(el => {
-          if (el.style.width === '56px' || el.style.height === '56px') {
-            // É o botão
-            el.style.cssText += `
-              position: fixed !important;
-              bottom: 20px !important;
-              right: 20px !important;
-              top: auto !important;
-              left: auto !important;
-            `;
-          } else {
-            // É o container do chat
-            el.style.cssText += `
-              position: fixed !important;
-              top: 0 !important;
-              right: 0 !important;
-              width: 400px !important;
-              height: 100vh !important;
-            `;
-          }
-        });
-      };
-
-      // Aplicar estilos múltiplas vezes para garantir
-      setTimeout(forceStyles, 100);
-      setTimeout(forceStyles, 500);
-      setTimeout(forceStyles, 1000);
-      setTimeout(forceStyles, 2000);
-    }
-
-    function setupChatBehavior() {
-      // Observer para detectar mudanças no DOM
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach(() => {
-          applyCustomStyles();
-        });
-      });
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style']
-      });
-
-      // Adicionar botão de fechar
-      setTimeout(() => {
-        const chatContainer = document.querySelector('div[style*="position: fixed"][style*="width"][style*="height"]:not([style*="56px"])');
-        if (chatContainer && !chatContainer.querySelector('.custom-close-btn')) {
-          const closeBtn = document.createElement('button');
-          closeBtn.className = 'custom-close-btn';
-          closeBtn.innerHTML = '×';
-          closeBtn.style.cssText = `
-            position: absolute !important;
-            top: 12px !important;
-            right: 15px !important;
-            background: transparent !important;
-            border: none !important;
-            color: white !important;
-            font-size: 28px !important;
-            cursor: pointer !important;
-            z-index: 10001 !important;
-            line-height: 1 !important;
-            padding: 0 !important;
-            width: 30px !important;
-            height: 30px !important;
-          `;
-          
-          closeBtn.addEventListener('click', () => {
-            chatContainer.style.display = 'none';
-          });
-          
-          const header = chatContainer.querySelector('div:first-child');
-          if (header) {
-            header.appendChild(closeBtn);
-          }
-        }
-      }, 2000);
+      // Abre uma nova janela/aba com o chat
+      const chatWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+      
+      if (chatWindow) {
+        chatWindow.document.write(chatPageHTML);
+        chatWindow.document.close();
+        chatWindow.focus();
+      } else {
+        // Fallback se pop-up for bloqueado
+        alert('Por favor, permita pop-ups para abrir o chat ou use Ctrl+Click no botão do chat.');
+      }
     }
   </script>
 </body>
 </html>
-
-
-
-
