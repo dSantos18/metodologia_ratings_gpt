@@ -208,5 +208,32 @@
       onDebtChange(); // também chama calc()
     });
   </script>
+
+<script type="module">
+import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+Chatbot.init({
+chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
+apiHost: "https://cloud.flowiseai.com",
+theme: {
+button: {
+backgroundColor: "#1E428B", /* azul do site */
+iconColor: "#FFFFFF",
+size: "48px",
+bottom: "20px",
+right: "20px",
+borderRadius: "50%"
+},
+chatWindow: {
+title: "Assistente",
+titleBackgroundColor: "#009933", /* verde do site */
+backgroundColor: "#FFFFFF",
+textColor: "#1E428B",
+poweredByTextColor: "#999999"
+}
+}
+})
+</script>
+  
 </body>
 </html>
+
