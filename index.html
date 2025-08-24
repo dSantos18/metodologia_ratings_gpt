@@ -75,19 +75,11 @@
         borderRadius: "50%"
       },
       chatWindow: {
-        title: "Metodologia de Risco de Crédito",
+        title: "Chatbot Metodologia de Risco de Crédito",
         titleBackgroundColor: "#009933",
         backgroundColor: "#FFFFFF",
         textColor: "#1E428B",
-        poweredByTextColor: "#999999",
-
-        /* Faz a janela ocupar toda a lateral esquerda */
-        width: "40%",         /* ocupa 40% da tela (pode ajustar para 100% se quiser full) */
-        height: "100vh",      /* altura total da janela */
-        position: "fixed",
-        top: "0",
-        left: "0",
-        borderRadius: "0"     /* remove bordas arredondadas */
+        poweredByTextColor: "#999999"
       }
     },
     initialMessages: [
@@ -96,9 +88,31 @@
   })
 </script>
 
+<style>
+  /* Força o chat a abrir como painel lateral direito */
+  .flowise-chatbot-container {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    height: 100vh !important;
+    width: 40% !important;  /* pode trocar para 100% se quiser tela cheia */
+    border-radius: 0 !important;
+    max-height: none !important;
+    z-index: 9999 !important; /* garante que fique acima dos outros elementos */
+  }
+
+  /* Garante rolagem no conteúdo interno */
+  .flowise-chatbot-container .chat-window {
+    height: 100% !important;
+    overflow-y: auto !important;
+  }
+</style>
+
+
   
 </body>
 </html>
+
 
 
 
