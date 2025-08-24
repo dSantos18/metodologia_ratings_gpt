@@ -93,105 +93,51 @@
 
   <script>
     function openChatPage() {
-      // Cria o HTML da página do chat
-      const chatPageHTML = `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat - Metodologia de Risco de Crédito</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      background: #f8fafc;
-      height: 100vh;
-      overflow: hidden;
-    }
-    
-    .header {
-      background: #009933;
-      color: white;
-      padding: 16px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    
-    .header h1 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 600;
-    }
-    
-    .close-btn {
-      position: absolute;
-      top: 50%;
-      right: 20px;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      padding: 5px;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    
-    .close-btn:hover {
-      background: rgba(255,255,255,0.2);
-    }
-    
-    .chat-container {
-      height: calc(100vh - 68px);
-    }
-    
-    flowise-fullchatbot {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>Chatbot Metodologia de Risco de Crédito</h1>
-    <button class="close-btn" onclick="window.close()" title="Fechar">×</button>
-  </div>
-  
-  <div class="chat-container">
-    <flowise-fullchatbot></flowise-fullchatbot>
-  </div>
-
-  <script type="module">
-    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-    Chatbot.initFull({
-      chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
-      apiHost: "https://cloud.flowiseai.com",
-      theme: {
-        chatWindow: {
-          backgroundColor: "#FFFFFF",
-          textColor: "#1E428B",
-          poweredByTextColor: "#999999"
-        }
-      }
-    })
-  </script>
-</body>
-</html>`;
-
       // Abre uma nova janela/aba com o chat
       const chatWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
       
       if (chatWindow) {
-        chatWindow.document.write(chatPageHTML);
+        // Escreve o HTML da página do chat
+        chatWindow.document.write('<!DOCTYPE html>');
+        chatWindow.document.write('<html lang="pt-BR">');
+        chatWindow.document.write('<head>');
+        chatWindow.document.write('<meta charset="UTF-8"/>');
+        chatWindow.document.write('<meta name="viewport" content="width=device-width, initial-scale=1.0"/>');
+        chatWindow.document.write('<title>Chat - Metodologia de Risco de Crédito</title>');
+        chatWindow.document.write('<style>');
+        chatWindow.document.write('body { margin: 0; padding: 0; font-family: Inter, sans-serif; background: #f8fafc; height: 100vh; overflow: hidden; }');
+        chatWindow.document.write('.header { background: #009933; color: white; padding: 16px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }');
+        chatWindow.document.write('.header h1 { margin: 0; font-size: 20px; font-weight: 600; }');
+        chatWindow.document.write('.close-btn { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }');
+        chatWindow.document.write('.close-btn:hover { background: rgba(255,255,255,0.2); }');
+        chatWindow.document.write('.chat-container { height: calc(100vh - 68px); }');
+        chatWindow.document.write('flowise-fullchatbot { width: 100%; height: 100%; display: block; }');
+        chatWindow.document.write('</style>');
+        chatWindow.document.write('</head>');
+        chatWindow.document.write('<body>');
+        chatWindow.document.write('<div class="header">');
+        chatWindow.document.write('<h1>Chatbot Metodologia de Risco de Crédito</h1>');
+        chatWindow.document.write('<button class="close-btn" onclick="window.close()" title="Fechar">×</button>');
+        chatWindow.document.write('</div>');
+        chatWindow.document.write('<div class="chat-container">');
+        chatWindow.document.write('<flowise-fullchatbot></flowise-fullchatbot>');
+        chatWindow.document.write('</div>');
+        chatWindow.document.write('<script type="module">');
+        chatWindow.document.write('import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js";');
+        chatWindow.document.write('Chatbot.initFull({');
+        chatWindow.document.write('chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",');
+        chatWindow.document.write('apiHost: "https://cloud.flowiseai.com",');
+        chatWindow.document.write('theme: {');
+        chatWindow.document.write('chatWindow: {');
+        chatWindow.document.write('backgroundColor: "#FFFFFF",');
+        chatWindow.document.write('textColor: "#1E428B",');
+        chatWindow.document.write('poweredByTextColor: "#999999"');
+        chatWindow.document.write('}');
+        chatWindow.document.write('}');
+        chatWindow.document.write('})');
+        chatWindow.document.write('<\/script>');
+        chatWindow.document.write('</body>');
+        chatWindow.document.write('</html>');
         chatWindow.document.close();
         chatWindow.focus();
       } else {
