@@ -17,6 +17,12 @@
     .btn-primary:hover{background:#16336a;transform:translateY(-2px)}
     .btn-secondary{background:#FFFFFF;color:#1E428B;border-color:#1E428B;transition:background-color .3s ease, color .3s ease, transform .2s ease}
     .btn-secondary:hover{background:#f0f5ff;transform:translateY(-2px)}
+    
+    /* Ajuste para o chat do Flowise */
+    .flowise-chatbot-container {
+      max-height: 550px !important;
+      overflow-y: auto !important;
+    }
   </style>
 </head>
 <body class="bg-white flex items-center justify-center min-h-screen p-4">
@@ -54,38 +60,35 @@
     </footer>
   </main>
 
-
-<script type="module">
-  import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-  Chatbot.init({
-    chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
-    apiHost: "https://cloud.flowiseai.com",
-    theme: {
-      button: {
-        backgroundColor: "#1E428B",
-        iconColor: "#FFFFFF",
-        size: "48px",
-        bottom: "20px",
-        right: "20px",
-        borderRadius: "50%"
+  <script type="module">
+    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+    Chatbot.init({
+      chatflowid: "61404541-6f1e-4364-8ef8-3647f4573ea6",
+      apiHost: "https://cloud.flowiseai.com",
+      theme: {
+        button: {
+          backgroundColor: "#1E428B",
+          iconColor: "#FFFFFF",
+          size: "48px",
+          bottom: "20px",
+          right: "20px",
+          borderRadius: "50%"
+        },
+        chatWindow: {
+          title: "Chatbot Metodologia de Risco de Crédito",
+          titleBackgroundColor: "#009933",
+          backgroundColor: "#FFFFFF",
+          textColor: "#1E428B",
+          poweredByTextColor: "#999999",
+          height: "550px",
+          width: "400px"
+        }
       },
-      chatWindow: {
-        title: "Chatbot Metodologia de Risco de Crédito",
-        titleBackgroundColor: "#009933",
-        backgroundColor: "#FFFFFF",
-        textColor: "#1E428B",
-        poweredByTextColor: "#999999",
-        height: "550px", /* aumenta altura da janela */
-        width: "400px"   /* largura fixa */
-      }
-    },
-    initialMessages: [
-      "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
-    ]
-  })
-</script>
-
-  
+      initialMessages: [
+        "O que posso ajudar referente a metodologia de risco de crédito das agências Fitch, Moody's e S&P Ratings?"
+      ]
+    })
+  </script>
 </body>
 </html>
 
